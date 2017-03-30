@@ -1,5 +1,8 @@
+import org.jetbrains.annotations.Mutable
+import java.security.SecureRandom
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 // For testing
 fun main(args : Array<String>) {
@@ -42,13 +45,104 @@ fun main(args : Array<String>) {
     helloWorld.hello()
     helloText.hello()
     helloBackwards.hello()
-    */
 
     var matr = Array(4, { i -> DoubleArray(4, { j -> 4.0 * i + j })})
     MatrCalc.print(matr)
     //MatrCalc.rotate(matr)
     //MatrCalc.print(matr)
     println(MatrCalc.gaussDet(matr))
+
+    val mlist : MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+    println(lst(mlist, 10))
+    println(lst(mlist, 6))
+    println(lst(mlist, 1))
+
+    isPol("abba")
+    isPol("aba")
+    isPol("sabbath")
+
+    isSator("SATORAREPOTENETOPERAROTAS")
+    isSator("ABCB0BCBA")
+    isSator("ABCLOLCBA")
+    isSator("Sabbath")
+
+    val list : List<Int> = listOf(1, 2, 3, 2, 2, 4, 6)
+    val set : Set<Int> = setOf(1, 2, 4)
+    val res = ind(list, set)
+    for (elem in res)
+    {
+        for (el in elem)
+            print(el.toString() + "\t")
+        println()
+    }
+
+    val list0 : List<Int> = listOf(1, 2, 3, 2, 2, 4, 6)
+    val set0 : Set<Int> = setOf(1, 2, 7)
+    val res0 = ind(list0, set0)
+    for (elem in res0)
+    {
+        for (el in elem)
+            print(el.toString() + "\t")
+        println()
+    }
+
+    println(manualSubString("abcdefg", 2, 5))
+    println(manualSubString("abcdefg", 5, 2))
+    println(manualSubString("abcdefg", 6, 6))
+    println(manualSubString("abcdefg", 6, 7))
+    println(autoSubString("abcdefg", 2, 5))
+
+    val set = setOf<Int>(1, 2, 3, 4)
+    val res = subSets(set)
+    for (subset in res)
+    {
+        for (elem in subset)
+            print(elem.toString() + "\t")
+        println()
+    }
+
+    val names = listOf("0", "1", "2", "3", "4")
+    val matr = listOf(listOf(false, true, true, true, true),
+                      listOf(true, false, false, false, false),
+                      listOf(true, false, false, false, true),
+                      listOf(true, false, false, false, true),
+                      listOf(true, false, true, true, false))
+    colourize(matr, names)
+
+    println()
+
+    val names2 = listOf("1", "2", "3", "4", "5", "6", "7", "8")
+    val matr2 = listOf(listOf(false, true, false, false, false, true, true, true),
+                       listOf(true, false, false, false, true, false, true, true),
+                       listOf(false, false, false, false, true, true, false, true),
+                       listOf(false, false, false, false, true, true, true, false),
+                       listOf(false, true, true, true, false, false, false, false),
+                       listOf(true, false, true, true, false, false, false, false),
+                       listOf(true, true, false, true, false, false, false, false),
+                       listOf(true, true, true, false, false, false, false, false))
+    colourize(matr2, names2)
+*/
+
+    val classes = listOf<List<String>>(
+            listOf("Гога", "Марико", "Вано"),
+            listOf("Ладо", "Гиви", "Нино", "Софико"),
+            listOf("Сосо", "Андро", "Майя")
+    )
+
+    val relations = listOf<Pair<String, List<String>>>(
+            Pair<String, List<String>>("Гога", listOf("Ладо", "Вано")),
+            Pair<String, List<String>>("Марико", listOf("Вано", "Андро")),
+            Pair<String, List<String>>("Вано", listOf("Гога", "Майя")),
+            Pair<String, List<String>>("Ладо", listOf("Майя", "Сосо")),
+            Pair<String, List<String>>("Гиви", listOf("Нино", "Ладо", "Софико")),
+            Pair<String, List<String>>("Нино", listOf("Софико", "Марико")),
+            Pair<String, List<String>>("Софико", listOf("Гиви", "Андро")),
+            Pair<String, List<String>>("Сосо", listOf("Марико", "Вано")),
+            Pair<String, List<String>>("Андро", listOf("Сосо", "Майя")),
+            Pair<String, List<String>>("Майя", listOf("Гога", "Гиви"))
+    )
+
+    split(classes, relations)
 }
 
 // CW 1
@@ -556,3 +650,277 @@ object MatrCalc
     }
 }
 
+// HW 3
+
+fun lst(list : MutableList<Int>, n : Int) : Double
+{
+    fun shuffle(list : MutableList<Int>) : MutableList<Int>
+    {
+        val random : Random = SecureRandom()
+
+        for (i in 0..list.size-1)
+        {
+            val pos = random.nextInt(list.size)
+            val tmp : Int = list[i]
+            list[i] = list[pos]
+            list[pos] = tmp
+        }
+        return list
+    }
+
+    if (n >= list.size)
+        return list.average()
+
+    val random : Random = SecureRandom()
+    val pos : List<Int> = List(n, {e -> random.nextInt(list.size)})
+
+    return List(n, {t -> List(n, {i -> shuffle(list)[pos[i]]}).average()}).average()
+}
+
+fun isPol(str: String)
+{
+    if (str.equals(str.reversed()))
+        println("Yes")
+    else
+        println("No")
+}
+
+fun isSator(str: String)
+{
+    if (Math.sqrt(str.length.toDouble()) != Math.sqrt(str.length.toDouble()).toInt().toDouble())
+    {
+        println("No")
+        return
+    }
+
+    val side : Int = Math.sqrt(str.length.toDouble()).toInt()
+    val sqr = List<String>(side, {i -> str.substring(i*side, (i+1)*side)})
+    for (i in 0..(side - 1) / 2)
+    {
+        for (j in 0..(side - 1) / 2)
+            if (sqr[i][j] != sqr[side - 1 - i][side - 1 - j] || sqr[i][j] != sqr[j][i])
+            {
+                println("No")
+                return
+            }
+    }
+    println("Yes")
+}
+
+fun ind(list: List<Int>, set: Set<Int>) : List<MutableList<Int>>
+{
+    return List<MutableList<Int>>(set.size, {s ->
+            val lst = MutableList<Int>(0, {i -> -1})
+            for (i in 0..list.size - 1)
+                if (list[i] == set.elementAt(s))
+                    lst.add(i)
+            lst
+    })
+}
+
+fun manualSubString(str: String, a : Int, b : Int) : String
+{
+    if (a >= str.length || b >= str.length || a > b)
+        return ""
+    var res = ""
+    for (i in a..b)
+        res += str[i]
+    return res
+}
+
+fun autoSubString(str: String, a : Int, b : Int) : String
+{
+    if (a >= str.length || b >= str.length || a > b)
+        return ""
+    return str.substring(a, b + 1)
+}
+
+fun <T>subSets(set : Set<T>) : MutableSet<MutableSet<T>>
+{
+    fun binary(num : Int, len : Int) : String
+    {
+        var str = ""
+        var temp = num
+        while (temp != 0)
+        {
+            str += temp % 2
+            temp /= 2
+        }
+        while (str.length < len)
+            str += '0'
+        return str.reversed()
+    }
+
+    val size = Math.pow(2.0, set.size.toDouble()).toInt()
+    var res : MutableSet<MutableSet<T>> = mutableSetOf()
+    for (i in 0..size - 1)
+    {
+        val bin = binary(i, set.size)
+        var temp : MutableSet<T> = mutableSetOf()
+        for (j in 0..bin.length - 1)
+        {
+            if (bin[j] == '1')
+                temp.add(set.elementAt(j))
+        }
+        res.add(temp)
+    }
+    return res
+}
+
+// input: adjacency matrix, node names
+fun colourize(matr : List<List<Boolean>>, names : List<String>, print : Boolean = true) : HashMap<String, Int>
+{
+    var colours = HashMap<String, Int>()
+
+    if (matr.size != names.size)
+    {
+        println("Invalid data!")
+        return colours
+    }
+
+    for (elem in matr)
+        if (elem.size != names.size)
+        {
+            println("Invalid data!")
+            return colours
+        }
+
+    var degrees = MutableList(names.size, {i -> Pair<String, Int>(names[i], matr[i].sumBy { elem -> if (elem) 1 else 0 })})
+
+    degrees.sortWith(kotlin.Comparator { o1, o2 -> if (o1.second < o2.second) 1 else -1 })
+
+    fun getColours(degrees : MutableList<Pair<String, Int>>)
+    {
+        colours.clear()
+
+        fun checkNear(name1 : String, name2: String) : Boolean
+        {
+            return matr[names.indexOf(name1)][names.indexOf(name2)]
+        }
+
+        var i = 0
+
+        while(colours.size < names.size)
+        {
+            for (node in degrees)
+            {
+                var checkPassed = true
+
+                if (colours.contains(node.first))
+                    checkPassed = false
+
+                for (name in names)
+                    if (checkNear(node.first, name) && colours.contains(name) && colours[name] == i)
+                        checkPassed = false
+
+                if (checkPassed)
+                    colours[node.first] = i
+            }
+
+            i++
+        }
+
+        if (print)
+        {
+            println("Number of colours: " + i.toString())
+            for (name in names)
+                println("\"" + name + "\"\t" + colours[name].toString())
+        }
+    }
+
+    if (print)
+        println("--- GREEDY ---")
+    getColours(degrees)
+
+    var groupSize = HashMap<String, Int>()
+
+    for (name in names)
+    {
+        val colour = colours[name]
+        var count = 0
+
+        for (elem in colours)
+            if (elem.value == colour)
+                count++
+
+        groupSize[name] = count
+    }
+
+    val newDegrees = MutableList(names.size, {i -> Pair<String, Int>(names[i], groupSize[names[i]]!!)}).sortedWith(kotlin.Comparator { o1, o2 -> if (o1.second > o2.second) 1 else -1 }).toMutableList()
+
+    if (print)
+        println("--- BETTER ---")
+    getColours(newDegrees)
+
+    return colours
+}
+
+// splits into perfect classes first, then merges the smallest classes until there number of classes is equal or less than original
+fun split(classes : List<List<String>>, relations: List<Pair<String, List<String>>>) : HashMap<String, Int>
+{
+    val maxClasses = classes.size
+
+    var mNames = mutableListOf<String>()
+    for (cls in classes)
+        for (name in cls)
+            mNames.add(name)
+    val names = mNames.toList()
+
+    var mMatr = MutableList<MutableList<Boolean>>(names.size, {i -> MutableList(names.size, {j -> false})})
+    for (relation in relations)
+        for (name in relation.second)
+        {
+            mMatr[names.indexOf(name)][names.indexOf(relation.first)] = true
+            mMatr[names.indexOf(relation.first)][names.indexOf(name)] = true
+        }
+    val matr = List<List<Boolean>>(names.size, {i -> mMatr[i].toList()})
+
+    var colours = colourize(matr, names, false)
+
+    var currClasses = -1
+    for (elem in colours)
+        if (elem.value > currClasses)
+            currClasses = elem.value
+    currClasses++
+
+    if (currClasses <= maxClasses)
+    {
+        for (name in names)
+            println("\"" + name + "\"\t" + colours[name].toString())
+        return colours
+    }
+
+    while (maxClasses < currClasses)
+    {
+        var groupSize = HashMap<String, Int>()
+
+        for (name in names)
+        {
+            val colour = colours[name]
+            var count = 0
+
+            for (elem in colours)
+                if (elem.value == colour)
+                    count++
+
+            groupSize[name] = count
+        }
+
+        val sorted = MutableList(names.size, {i -> Pair<String, Int>(names[i], groupSize[names[i]]!!)}).sortedWith(kotlin.Comparator { o1, o2 -> if (o1.second > o2.second) 1 else -1 }).toMutableList()
+
+        val class1 = colours[sorted[0].first]
+        var class2 = 1
+        while (colours[sorted[class2].first] == class1)
+            class2++
+
+        for (elem in colours)
+            if (elem.value == class2)
+                elem.setValue(class1!!)
+
+        currClasses--
+    }
+
+    for (name in names)
+        println("\"" + name + "\"\t" + colours[name].toString())
+    return colours
+}
